@@ -1,345 +1,404 @@
-# CRUD Deadline Assesment
+#Submisson deadline
 
-## GET /api/assessments
+### Create Deadline {{ tag: 'POST', label: '/v1/human-resource/submissionDeadline' }}
 
+### Response
 ```json
-[
-  {
-    "year": 2024,
-    "periods": [
-      {
-        "month": "January",
-        "submission_deadline": "2024-01-31"
-      },
-      {
-        "month": "February",
-        "submission_deadline": "2024-02-28"
-      },
-      {
-        "month": "December",
-        "submission_deadline": "2024-12-31"
-      }
-    ]
-  }
-]
+   The message Successfully setting deadline
+   The message Error years is not empty
+```
+### Body
+```typescript
+    const response = axios.post('/v1/human-resource/submissionDeadline/{years}', {
+          year: 2024,
+          periods: [
+              {
+              month: "January",
+              submission_deadline: "2024-01-31"
+              },
+              {
+              month: "February",
+              submission_deadline: "2024-02-29"
+              },
+              {
+              month: "March",
+              submission_deadline: "2024-03-31"
+              }
+              // Tambahkan bulan lainnya sesuai kebutuhan
+          ]
+    })
 ```
 
-## POST /api/assessments
+### Response success
+```json {{ title: '200' }}
+        {
+            "message": "Succesfuly setting deadline ."
+        }
+```
+### Response error
+```json {{ title: '404' }}
+        {
+            "message": "year is not empty and already exist."
+        }
+```
+
+## List get tahun assessment dan periode. {{ tag: 'GET', label: '/v1/human-resource/submissionDeadline' }}
+
+### Optional attributes
 
 ```json
-{
-  "year": 2024,
-  "periods": [
+   Unique this year submission deadline.
+   The array of periods month, submission_deadline.
+```
+
+### Response
+
+```json
+  year : Get this year submission deadline
+  periods : The array of periods mont submission deadline
+  periods.month :  Get name month in array periods
+  periods.submission_deadline : Get date submission_deadline in array periods
+```
+
+### Request end point
+
+```typescript
+  const response = axios.get('/v1/human-resource/submissionDeadline')
+```
+
+### Response 
+
+ ```json {{ title: '200' }}
+        {
+            "year": 2024,
+            "periods": [
+            {
+                "month": "January",
+                "submission_deadline": "2024-01-31"
+            },
+            {
+                "month": "February",
+                "submission_deadline": "2024-02-28"
+            },
+            {
+                "month": "Maret",
+                "submission_deadline": "2024-12-31"
+            }
+            ...
+            ]
+        },
+        ...
+  ```
+
+### List pertahun assessment dan periode. {{ tag: 'GET', label: '/v1/human-resource/submissionDeadline/{year}' }}
+ 
+## This endpoint takes a list of specific years to display data with year parameter.
+
+### Response
+
+```json
+  year : Get this year submission deadline
+  periods : The array of periods mont submission deadline
+  periods.month :  Get name month in array periods
+  periods.submission_deadline : Get date submission_deadline in array periods
+```
+
+### Request end point
+
+```typescript {{ title: 'axios' }}
+    const response = axios.get('/v1/human-resource/submissionDeadline/{years}')
+```
+
+### Response 
+```json {{ title: '200' }}
+        {
+            "year": 2024,
+            "periods": [
+            {
+                "month": "January",
+                "submission_deadline": "2024-01-31"
+            },
+            {
+                "month": "February",
+                "submission_deadline": "2024-02-28"
+            },
+            {
+                "month": "Maret",
+                "submission_deadline": "2024-12-31"
+            }
+            ...
+            ]
+        }
+```
+
+### Update setting deadline setiap tahun. {{ tag: 'PATCH', label: '/v1/human-resource/submissionDeadline/:id' }}
+
+### Required attributes
+
+```text
+  year : The name for the year unique
+  periods : The array of allowed periods name.
+```
+
+### Request
+```text
+  success : The message Successfully
+  error : The message Error years already exists
+```
+
+```typescript {{ title: 'axios' }}
+    const response = axios.patch('/v1/human-resource/submissionDeadline/:id', {
+        year: 2024,
+        created_at : 2024-01-31,
+        periods: [
+            {
+            month: "January",
+            submission_deadline: "2024-01-31"
+            },
+            {
+            month: "February",
+            submission_deadline: "2024-02-29"
+            },
+            {
+            month: "March",
+            submission_deadline: "2024-03-31"
+            }
+            // Tambahkan bulan lainnya sesuai kebutuhan
+        ]
+    })
+```
+
+Response success
+```json {{ title: '200' }}
+        {
+            "message": "Successfully updated."
+        }
+```
+Response error
+```json {{ title: '404' }}
+        {
+            "message": "Error years already exists."
+        }
+```
+
+### Delete Deadline . {{ tag: 'DELETE', label: '/v1/human-resource/submissionDeadline/:id' }}
+
+## This endpoint allows you to delete from deadline list.
+
+## Request
+```typescript {{ title: 'axios' }}
+    const response = axios.delete('/v1/human-resource/submissionDeadline/:id', {
+        year: 2024,
+        periods: [
+            {
+            month: "January",
+            submission_deadline: "2024-01-31"
+            },
+            {
+            month: "February",
+            submission_deadline: "2024-02-29"
+            },
+            {
+            month: "March",
+            submission_deadline: "2024-03-31"
+            }
+            // Tambahkan bulan lainnya sesuai kebutuhan
+        ]
+    })
+```
+
+## Response
+ ```json {{ title: '200' }}
+        {
+            "message": "Successfully delete form ."
+        }
+  ```
+
+### Post Generate Denda . {{ tag: 'POST', label: '/v1/human-resource/generateDenda' }}
+
+## This endpoint for generate denda.
+
+## Notes
+
+```text
+  If the penalty basis is not provided or is null, the penalty amount will also be considered null.
+  The current date should be dynamically fetched from the server at the time of the request to ensure accuracy.
+```
+
+## Request body
+
+```typescript {{ title: 'axios' }}
+    const response = axios.post('/v1/human-resource/generateDenda', {
+            employee_id: "E123",
+            submission_date: "2023-09-05",
+            deadline_date: "2023-09-01",
+            status: "draft",
+            penalty_basis: 10000
+    })
+```
+
+## Response
+```json {{ title: '200' }}
+        {
+            "employee_id": "E123",
+            "penalty_amount": 40000,
+            "days_late": 4,
+            "evaluation_status": "draft",
+            "message": "Late submission penalty calculated."
+        }
+```
+
+## All Report Denda . {{ tag: 'GET', label: '/v1/human-resource/reportDenda' }}
+
+## Notes
+
+```text
+  The report will include all employees.
+```
+
+## Request
+
+ ```typescript {{ title: 'axios' }}
+    const response = axios.post('/v1/human-resource/reportDenda')
+ ```
+
+ ## Response
+
+```json {{ title: '200' }}
     {
-      "month": "January",
-      "submission_deadline": "2024-01-31"
-    },
-    ...
-  ]
-}
+        "report": [
+                {
+                    "employee_id": "E123",
+                    "employee_name": "John Doe",
+                    "submission_date": "2023-09-05",
+                    "deadline_date": "2023-09-01",
+                    "days_late": 4,
+                    "penalty_amount": 40000,
+                    "evaluation_status": "draft"
+                },
+                {
+                    "employee_id": "E456",
+                    "employee_name": "Jane Smith",
+                    "submission_date": "2023-09-03",
+                    "deadline_date": "2023-09-01",
+                    "days_late": 2,
+                    "penalty_amount": 20000,
+                    "evaluation_status": "submitted"
+                }
+        ],
+        "message": "Report generated successfully."
+    }
 ```
 
-## Response success:
+### Report Denda Get Range Date . {{ tag: 'GET', label: '/v1/human-resource/reportDenda?start_date=2023-09-01&end_date=2023-09-05' }}
 
-```json
-{
-  "message": "Assessment period created successfully."
-}
+## Endpoint for generate denda.
+
+## Parameters
+
+```text
+  -  start_date (string, optional): Filter report from this date (YYYY-MM-DD).
+  -  end_date (string, optional): Filter report until this date (YYYY-MM-DD).
 ```
 
-## Response error:
+## Notes
 
-```json
-{
-  "message": "Assessment and Years must not blank."
-}
+```text
+  - The report will include all employees who have late submissions within the specified date range.
+  - If no parameters are provided, the report will default to showing all penalties for the current month.
+  - The API should handle cases where no penalties are found, returning an appropriate message and an empty report array.
 ```
 
-## PUT /api/assessments/{year}
+## Request 
 
-```json
-{
-  "periods": [
+```typescript {{ title: 'axios' }}
+    const response = axios.post('/v1/human-resource/reportDenda?start_date=2023-09-01&end_date=2023-09-05')
+```
+
+## Response
+
+```json {{ title: '200' }}
     {
-      "month": "January",
-      "submission_deadline": "2024-01-25" // contoh perubahan
-    },
-    ...
-  ]
-}
+        "report": [
+                {
+                    "employee_id": "E123",
+                    "employee_name": "John Doe",
+                    "submission_date": "2023-09-05",
+                    "deadline_date": "2023-09-01",
+                    "days_late": 4,
+                    "penalty_amount": 40000,
+                    "evaluation_status": "draft"
+                },
+                {
+                    "employee_id": "E456",
+                    "employee_name": "Jane Smith",
+                    "submission_date": "2023-09-03",
+                    "deadline_date": "2023-09-01",
+                    "days_late": 2,
+                    "penalty_amount": 20000,
+                    "evaluation_status": "submitted"
+                }
+        ],
+        "message": "Report generated successfully."
+    }
 ```
 
-## Response Success
+### History Denda. {{ tag: 'GET', label: '/v1/human-resource/historyDenda?employee_id=E123&start_date=2023-08-01&end_date=2023-09-05' }}
 
-```json
-{
-  "message": "Assessment period updated successfully."
-}
+## Endpoint for histoy denda.
+
+## Parameters
+
+```text
+  -  employee_id (string, optional): Filter by specific employee ID.
+  -  status (string, optional): Filter by evaluation status (e.g., draft, submitted, not submitted).
+  -  start_date (string, optional): Filter report from this date (YYYY-MM-DD).
+  -  end_date (string, optional): Filter report until this date (YYYY-MM-DD).
 ```
 
-## Response Error: Jika tahun yang diminta sudah dipilih
+## Notes 
 
-```json
-{
-  "error": "This year has already been selected and cannot be modified."
-}
+```text
+  - If no penalties are found for the specified filters, the response should contain an empty history array and an appropriate message.
+  - The API should handle date validation and return errors for invalid date formats.
+  - Pagination may be implemented if the history data set is extensive, to improve performance.
 ```
 
-## DELETE /api/assessments/{year}
+## Request
 
-```json
-{
-  "message": "Assessment period deleted successfully."
-}
+```typescript {{ title: 'axios' }}
+    const response = axios.post('/v1/human-resource/historyDenda?employee_id=E123&start_date=2023-08-01&end_date=2023-09-05')
 ```
 
-## Get: /api/assessments/{year}/{month}
+## Response 
 
-```json
-{
-  "year": 2024,
-  "month": "January",
-  "submission_deadline": "2024-01-31"
-}
-```
-
-## GET /api/employees
-
-```json
-[
-  {
-    "id": 1,
-    "name": "John Doe",
-    "department": "Sales"
-  },
-  {
-    "id": 2,
-    "name": "John Doexx",
-    "department": "Sales"
-  }
-]
-```
-
-## POST /api/employees
-
-```json
-{
-  "name": "John Doe",
-  "department": "Sales"
-}
-```
-
-## response successfully
-
-```json
-{
-  "message": "Employee created successfully."
-}
-```
-
-## Response error:
-
-```json
-{
-  "message": "Name and Department must not blank."
-}
-```
-
-### Mengambil daftar assessment yang terkait dengan karyawan tertentu.
-
-## GET /api/employees/{employeeId}/assessments
-
-```json
-{
-  "employeeId": 1,
-  "assessments": [
+```json {{ title: '200' }}
     {
-      "id": 1,
-      "assessment_period_id": 1,
-      "assessment_category": "Performance",
-      "submission_deadline": "2024-01-31",
-      "created_at": "2023-12-01"
-    },
-    ...
-  ]
-}
-```
-
-## POST /api/employees/{employeeId}/assessments
-
-```json
-{
-  "assessment_period_id": 1,
-  "assessment_category": "Performance",
-  "submission_deadline": "2024-01-31"
-}
-```
-
-## Response successfully
-
-```json
-{
-  "message": "Employee assessment created successfully."
-}
-```
-
-## Response error:
-
-```json
-{
-  "message": "assessment_category and submission_deadline must not blank."
-}
-```
-
-# Mengambil detail assessment untuk karyawan tertentu.
-## GET /api/employees/{employeeId}/assessments/{assessmentId}
-
-```json
-{
-  "assessment_period_id": 1,
-  "assessment_category": "Performance",
-  "submission_deadline": "2024-01-31",
-  "created_at": "2023-12-01",
-  "kpis": [
-    {
-      "id": 1,
-      "key_performance_indicator": "Sales Target",
-      "weight": 30,
-      "target": 100,
-      "notes": "Achieve monthly target",
-      "attachment": "link_to_attachment"
-    },
-    ...
-  ]
-}
-```
-
-# Memperbarui assessment untuk karyawan tertentu.
-## PUT /api/employees/{employeeId}/assessments/{assessmentId}
-
-```json
-{
-  "submission_deadline": "2024-01-25",
-  "kpis": [
-    {
-      "key_performance_indicator": "Sales Target",
-      "weight": 30,
-      "target": 100,
-      "notes": "Updated notes",
-      "attachment": "link_to_new_attachment"
-    },
-    ...
-  ]
-}
-```
-
-## response 
-```json
-{
-  "message": "Assessment updated successfully.",
-  "created_at": "2023-12-01" // diupdate jika ada perubahan
-}
-```
-
-# Menambahkan KPI baru untuk assessment tertentu.
-## POST /api/employees/{employeeId}/assessments/{assessmentId}/kpis
-
-```json
-{
-  "key_performance_indicator": "Sales Target",
-  "weight": 30,
-  "target": 100,
-  "notes": "Achieve monthly target",
-  "attachment": "link_to_attachment"
-}
-```
-
-## Respon Sukses 
-```json
-{
-  "message": "KPI added successfully."
-}
-```
-
-## Respon Error
-```json
-{
-    "message": "KPI added Erro Not Found."
-}
-```
-## Memperbarui KPI untuk assessment tertentu.
-## PUT /api/employees/{employeeId}/assessments/{assessmentId}/kpis/{kpiId}
-```json
-{
-  "key_performance_indicator": "Updated Target",
-  "weight": 30,
-  "target": 120,
-  "notes": "Revised target",
-  "attachment": "link_to_updated_attachment"
-}
-```
-
-## Respon Success
-```json
-{
-  "message": "KPI updated successfully."
-}
-```
-
-## Respon Error
-```json
-{
-  "message": "KPI updated Error."
-}
-```
-
-## Mengirimkan penilaian untuk assessment tertentu.
-## POST /api/employees/{employeeId}/assessments/{assessmentId}/submit
-```json
-{
-  "key_performance_indicator": "Updated Target",
-  "weight": 30,
-  "target": 120,
-  "notes": "Revised target",
-  "attachment": "link_to_updated_attachment"
-}
-```
-
-## Respon Successfuly
-```json
-{
-  "message": "KPI updated successfully."
-}
-```
-
-## Respon Error
-```json
-{
-  "message": "KPI updated error."
-}
-```
-
-## Penelian Denda
-```json
-{
-  "submission_date": "2024-01-30" // contoh tanggal pengiriman
-}
-```
-
-## response success
-```json
-{
-  "message": "Assessment submitted successfully.",
-  "penalty": false // true jika lewat batas waktu
-}
-```
-
-
-## response error
-```json
-{
-  "error": "Submission deadline has passed. A penalty will be applied."
-}
+        "history": [
+            {
+                "employee_id": "E123",
+                "employee_name": "John Doe",
+                "submission_date": "2023-09-05",
+                "deadline_date": "2023-09-01",
+                "days_late": 4,
+                "penalty_amount": 40000,
+                "evaluation_status": "draft",
+                "penalty_date": "2023-09-06"
+            },
+            {
+                "employee_id": "E123",
+                "employee_name": "John Doe",
+                "submission_date": "2023-08-28",
+                "deadline_date": "2023-08-25",
+                "days_late": 3,
+                "penalty_amount": 30000,
+                "evaluation_status": "submitted",
+                "penalty_date": "2023-08-29"
+            }
+        ],
+        "total_penalties": 70000,
+        "message": "Penalty history retrieved successfully."
+    }
 ```
 
 # ERD 
@@ -364,40 +423,27 @@
 | submission_deadline     |
 +------------------------+
 
-+-------------------+
-|      Employees    |
-+-------------------+
-| id (PK)           |
-| name              |
-| department        |
-+-------------------+
-           |
-           | 1
-           |
-           | N
-+------------------------+
-| Employee_Assessments   |
-+------------------------+
-| id (PK)                |
-| employee_id (FK)       |
-| assessment_period_id (FK) |
-| assessment_category     |
-| submission_deadline     |
-| created_at             |
-+------------------------+
-           |
-           | N
-           |
-           | 1
-+--------------------------+
-|    Key_Performance_Indicators |
-+--------------------------+
-| id (PK)                  |
-| employee_assessment_id (FK) |
-| key_performance_indicator |
-| weight                   |
-| target                   |
-| notes                    |
-| attachment               |
-+--------------------------+
++-------------------+               +---------------------+
+|     Employee      |               |      Evaluation     |
++-------------------+               +---------------------+
+| employee_id (PK)  |<---1       *--| evaluation_id (PK)  |
+| employee_name     |               | employee_id (FK)    |
+| department        |               | submission_date     |
++-------------------+               | deadline_date       |
+                                     | status              |
+                                     +---------------------+
+                                                |
+                                                | 1
+                                                |
+                                                |
+                                                | 1
+                                     +---------------------+
+                                     |       Penalty       |
+                                     +---------------------+
+                                     | penalty_id (PK)     |
+                                     | evaluation_id (FK)   |
+                                     | days_late           |
+                                     | penalty_amount       |
+                                     | penalty_date         |
+                                     +---------------------+
 ```
